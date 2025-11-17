@@ -1,0 +1,171 @@
+Comprehensive CRM for Universal Bank - Core Components
+1. Lead & Customer Management Pipeline
+Suspect → Prospect → Lead → Customer Journey:
+
+Suspect Pool: Unqualified contacts from marketing campaigns, referrals, purchased lists
+Prospect Qualification: Scoring system based on demographics, banking needs, assets, creditworthiness
+Lead Nurturing: Automated workflows for different product lines (retail, SME, corporate, private banking)
+Customer 360° View: Complete relationship overview across all products and touchpoints
+
+2. Opportunity & Deal Management
+Deal Pipeline Stages:
+
+Identification → Qualification → Proposal → Negotiation → Closing → Post-sale
+Product-specific pipelines (loans, mortgages, investment products, business accounts)
+Deal scoring and probability tracking
+Cross-sell/up-sell opportunity identification
+Revenue forecasting and pipeline analytics
+Approval workflows integrated with credit/risk systems
+
+3. Activity & Task Management
+Meeting Management:
+
+Calendar integration (Outlook/Google)
+Pre-meeting briefings with customer history
+Meeting notes capture with automatic CRM updates
+Follow-up task generation
+Video meeting integration (Teams/Zoom)
+
+Action Delegation & Tracking:
+
+Task assignment with priority levels
+Automated escalation for overdue tasks
+Team workload balancing
+SLA tracking for customer commitments
+Mobile notifications for field staff
+
+4. Target Management & Performance Tracking
+Target Distribution:
+
+Hierarchical target allocation (Branch → Team → Individual)
+Product-wise and customer segment-wise targets
+Territory/portfolio assignment
+Dynamic redistribution based on performance
+
+Target Tracking:
+
+Real-time dashboards for achievement vs. targets
+Product mix analysis
+Conversion rate tracking by stage
+Win/loss analysis
+Incentive calculation automation
+
+5. Access Control Architecture (4-Layer Model)
+Layer 1 - Strategic (C-Suite/Executive):
+
+Full system access
+Bank-wide analytics and reporting
+Strategic planning tools
+Budget and target approval
+
+Layer 2 - Regional/Divisional Management:
+
+Regional/divisional data access
+Team performance monitoring
+Target setting and adjustment
+Resource allocation
+
+Layer 3 - Branch/Team Managers:
+
+Branch/team customer portfolios
+Individual team member activities
+Local pipeline management
+Cannot access other branches without permission
+
+Layer 4 - Relationship Managers/Sales Staff:
+
+Own customer portfolio only
+Assigned leads and prospects
+Personal tasks and targets
+Limited reporting capabilities
+
+Additional Access Controls:
+
+Role-based permissions (sales, service, support)
+Product-line restrictions
+Sensitive data masking (complete account numbers, high-net-worth details)
+Audit trails for all data access
+
+6. Integration Requirements
+Core Banking System (CBS):
+
+Real-time account information
+Transaction history
+Product holdings
+Credit facilities
+
+Other Critical Systems:
+
+Credit scoring and approval systems
+Document management system
+Communication platforms (email, SMS, WhatsApp)
+Marketing automation
+Risk management systems
+Compliance and KYC databases
+
+7. Analytics & Intelligence
+Predictive Capabilities:
+
+Churn prediction
+Next-best-product recommendations
+Lifetime value calculation
+Lead scoring AI models
+
+Reporting Suite:
+
+Standard regulatory reports
+Custom dashboard builder
+Automated executive summaries
+Market share and competitive analysis
+
+8. Customer Communication Hub
+
+Omnichannel communication tracking (branch, phone, email, chat, social)
+Campaign management integration
+Complaint and service request tracking
+Communication templates and compliance-approved scripts
+Sentiment analysis
+
+9. Mobile Capabilities
+
+Offline functionality for field officers
+Quick customer onboarding
+Document capture and upload
+Location-based check-ins
+Voice notes and recordings
+
+10. Compliance & Audit Features
+
+AML/KYC status tracking
+Regulatory reporting
+Data retention policies
+Customer consent management (GDPR/data privacy)
+Audit logs for all customer interactions
+
+11. Additional Modern Features
+Collaboration Tools:
+
+Internal chat for deal collaboration
+Knowledge base integration
+Expert/specialist consultation requests
+
+Gamification:
+
+Leaderboards
+Achievement badges
+Team competitions
+
+AI-Powered Assistance:
+
+Smart suggestions during customer interactions
+Automated data entry from documents
+Meeting summaries generation
+Email/communication auto-classification
+
+
+Implementation Considerations for Bosnia & Herzegovina Banking Context:
+
+Multi-language support (Bosnian/Croatian/Serbian, English)
+Local regulatory compliance (Banking Agency requirements)
+Integration with local payment systems (instant payments infrastructure you're working on)
+Local customer behavior patterns (branch-heavy vs. digital preferences)
