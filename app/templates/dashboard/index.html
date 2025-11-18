@@ -1,0 +1,253 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Dashboard - {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
+    <p class="text-gray-600 mt-1">Dobrodošli, {{ current_user.full_name }}</p>
+</div>
+
+<!-- KPI Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <!-- Customers Card -->
+    <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-500 text-sm">Ukupno klijenata</p>
+                <p class="text-3xl font-bold text-gray-900 mt-1">{{ total_customers }}</p>
+                <p class="text-green-600 text-sm mt-1">+{{ new_customers_this_month }} ovaj mjesec</p>
+            </div>
+            <div class="bg-blue-100 rounded-full p-3">
+                <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leads Card -->
+    <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-500 text-sm">Aktivni leadovi</p>
+                <p class="text-3xl font-bold text-gray-900 mt-1">{{ total_leads }}</p>
+            </div>
+            <div class="bg-yellow-100 rounded-full p-3">
+                <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- Opportunities Card -->
+    <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-500 text-sm">Pipeline vrijednost</p>
+                <p class="text-3xl font-bold text-gray-900 mt-1">{{ "%.0f"|format(opportunities_value) }} BAM</p>
+                <p class="text-gray-600 text-sm mt-1">{{ active_opportunities }} prilika</p>
+            </div>
+            <div class="bg-green-100 rounded-full p-3">
+                <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tasks Card -->
+    <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-500 text-sm">Moji zadaci</p>
+                <p class="text-3xl font-bold text-gray-900 mt-1">{{ my_pending_tasks }}</p>
+                {% if my_overdue_tasks > 0 %}
+                <p class="text-red-600 text-sm mt-1">{{ my_overdue_tasks }} kasne</p>
+                {% endif %}
+            </div>
+            <div class="bg-purple-100 rounded-full p-3">
+                <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                </svg>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Two Column Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Recent Customers -->
+    <div class="bg-white rounded-lg shadow">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-900">Nedavni klijenti</h2>
+        </div>
+        <div class="p-6">
+            {% if recent_customers %}
+            <div class="space-y-4">
+                {% for customer in recent_customers %}
+                <div class="flex items-center justify-between">
+                    <div>
+                        <a href="{{ url_for('customers.view', id=customer.id) }}"
+                           class="text-blue-600 hover:text-blue-800 font-medium">
+                            {{ customer.full_name }}
+                        </a>
+                        <p class="text-sm text-gray-500">{{ customer.stage.value }}</p>
+                    </div>
+                    <span class="text-xs text-gray-400">{{ customer.created_at|datetime('%d.%m.%Y') }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-gray-500 text-center py-4">Nema podataka</p>
+            {% endif %}
+            <div class="mt-4 text-center">
+                <a href="{{ url_for('customers.index') }}"
+                   class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                    Vidi sve →
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Opportunities -->
+    <div class="bg-white rounded-lg shadow">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-900">Aktivne prilike</h2>
+        </div>
+        <div class="p-6">
+            {% if recent_opportunities %}
+            <div class="space-y-4">
+                {% for opp in recent_opportunities %}
+                <div class="flex items-center justify-between">
+                    <div>
+                        <a href="{{ url_for('opportunities.view', id=opp.id) }}"
+                           class="text-blue-600 hover:text-blue-800 font-medium">
+                            {{ opp.name }}
+                        </a>
+                        <p class="text-sm text-gray-500">{{ opp.stage.value }} - {{ "%.0f"|format(opp.amount) }} BAM</p>
+                    </div>
+                    <span class="text-xs px-2 py-1 bg-green-100 text-green-800 rounded">
+                        {{ opp.probability }}%
+                    </span>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-gray-500 text-center py-4">Nema podataka</p>
+            {% endif %}
+            <div class="mt-4 text-center">
+                <a href="{{ url_for('opportunities.index') }}"
+                   class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                    Vidi sve →
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upcoming Tasks -->
+    <div class="bg-white rounded-lg shadow lg:col-span-2">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-900">Nadolazeći zadaci</h2>
+        </div>
+        <div class="p-6">
+            {% if upcoming_tasks %}
+            <div class="space-y-3">
+                {% for task in upcoming_tasks %}
+                <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
+                    <div class="flex-1">
+                        <a href="{{ url_for('activities.view_task', id=task.id) }}"
+                           class="text-blue-600 hover:text-blue-800 font-medium">
+                            {{ task.title }}
+                        </a>
+                        <p class="text-sm text-gray-500 mt-1">
+                            Rok: {{ task.due_date|datetime('%d.%m.%Y %H:%M') }}
+                        </p>
+                    </div>
+                    <span class="text-xs px-2 py-1 {% if task.priority.value == 'urgent' %}bg-red-100 text-red-800{% elif task.priority.value == 'high' %}bg-orange-100 text-orange-800{% else %}bg-blue-100 text-blue-800{% endif %} rounded">
+                        {{ task.priority.value }}
+                    </span>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-gray-500 text-center py-4">Nema nadolazećih zadataka</p>
+            {% endif %}
+            <div class="mt-4 text-center">
+                <a href="{{ url_for('activities.tasks') }}"
+                   class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                    Vidi sve zadatke →
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Targets -->
+    {% if active_targets %}
+    <div class="bg-white rounded-lg shadow lg:col-span-2">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-900">Moji ciljevi</h2>
+        </div>
+        <div class="p-6">
+            <div class="space-y-4">
+                {% for target in active_targets %}
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-medium">{{ target.name }}</span>
+                        <span class="text-sm text-gray-600">{{ "%.1f"|format(target.achievement_percentage) }}%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-blue-600 h-2 rounded-full"
+                             style="width: {{ target.achievement_percentage }}%"></div>
+                    </div>
+                    <div class="flex justify-between text-xs text-gray-500 mt-1">
+                        <span>{{ "%.0f"|format(target.achieved_value) }} / {{ "%.0f"|format(target.target_value) }} BAM</span>
+                        <span>{{ target.end_date|date }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Quick Actions -->
+<div class="mt-8 bg-white rounded-lg shadow p-6">
+    <h2 class="text-lg font-semibold text-gray-900 mb-4">Brze akcije</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <a href="{{ url_for('customers.create') }}"
+           class="flex flex-col items-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition">
+            <svg class="w-8 h-8 text-blue-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+            </svg>
+            <span class="text-sm font-medium">Novi klijent</span>
+        </a>
+
+        <a href="{{ url_for('opportunities.create') }}"
+           class="flex flex-col items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition">
+            <svg class="w-8 h-8 text-green-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            <span class="text-sm font-medium">Nova prilika</span>
+        </a>
+
+        <a href="{{ url_for('activities.create_task') }}"
+           class="flex flex-col items-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition">
+            <svg class="w-8 h-8 text-purple-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+            </svg>
+            <span class="text-sm font-medium">Novi zadatak</span>
+        </a>
+
+        <a href="{{ url_for('activities.create_meeting') }}"
+           class="flex flex-col items-center p-4 bg-yellow-50 rounded-lg hover:bg-yellow-100 transition">
+            <svg class="w-8 h-8 text-yellow-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+            <span class="text-sm font-medium">Novi sastanak</span>
+        </a>
+    </div>
+</div>
+{% endblock %}

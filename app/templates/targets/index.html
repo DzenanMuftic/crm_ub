@@ -1,0 +1,96 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Ciljevi - {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="mb-6 flex justify-between items-center">
+    <h1 class="text-3xl font-bold text-gray-900">Ciljevi</h1>
+    {% if current_user.access_level.value <= 3 %}
+    <a href="{{ url_for('targets.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+        + Novi cilj
+    </a>
+    {% endif %}
+</div>
+
+<!-- Targets Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    {% for target in targets %}
+    <div class="bg-white rounded-lg shadow-lg p-6">
+        <div class="flex items-start justify-between mb-4">
+            <div>
+                <h3 class="text-xl font-bold text-gray-900">{{ target.name }}</h3>
+                <p class="text-sm text-gray-500 mt-1">{{ target.target_type.value }}</p>
+            </div>
+            <span class="px-3 py-1 rounded-full text-sm font-semibold
+                {% if target.achievement_percentage >= 100 %}bg-green-100 text-green-800
+                {% elif target.achievement_percentage >= 75 %}bg-blue-100 text-blue-800
+                {% elif target.achievement_percentage >= 50 %}bg-yellow-100 text-yellow-800
+                {% else %}bg-red-100 text-red-800{% endif %}">
+                {{ "%.1f"|format(target.achievement_percentage) }}%
+            </span>
+        </div>
+
+        {% if target.description %}
+        <p class="text-gray-600 mb-4">{{ target.description }}</p>
+        {% endif %}
+
+        <!-- Progress Bar -->
+        <div class="mb-4">
+            <div class="flex justify-between text-sm text-gray-600 mb-2">
+                <span>{{ "%.0f"|format(target.achieved_value) }} BAM</span>
+                <span>{{ "%.0f"|format(target.target_value) }} BAM</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-4">
+                <div class="h-4 rounded-full transition-all duration-500
+                    {% if target.achievement_percentage >= 100 %}bg-green-600
+                    {% elif target.achievement_percentage >= 75 %}bg-blue-600
+                    {% elif target.achievement_percentage >= 50 %}bg-yellow-500
+                    {% else %}bg-red-500{% endif %}"
+                     style="width: {{ min(target.achievement_percentage, 100) }}%">
+                </div>
+            </div>
+        </div>
+
+        <!-- Period -->
+        <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
+            <div class="flex items-center">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                {{ target.start_date|date }} - {{ target.end_date|date }}
+            </div>
+            <span class="capitalize">{{ target.period_type.value }}</span>
+        </div>
+
+        <!-- Owner -->
+        {% if target.user %}
+        <div class="flex items-center text-sm text-gray-600 mb-4">
+            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+            </svg>
+            {{ target.user.full_name }}
+        </div>
+        {% endif %}
+
+        <!-- Action Button -->
+        <div class="pt-4 border-t">
+            <a href="{{ url_for('targets.view', id=target.id) }}"
+               class="text-blue-600 hover:text-blue-800 font-medium">
+                Vidi detalje →
+            </a>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-span-2 bg-white rounded-lg shadow p-12 text-center">
+        <div class="text-6xl mb-4">🎯</div>
+        <p class="text-gray-500 text-lg mb-4">Nema aktivnih ciljeva</p>
+        {% if current_user.access_level.value <= 3 %}
+        <a href="{{ url_for('targets.create') }}"
+           class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg">
+            Kreiraj prvi cilj
+        </a>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

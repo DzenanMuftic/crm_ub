@@ -1,0 +1,14 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Pristup odbijen - {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="text-center py-12">
+    <div class="text-6xl mb-4">🚫</div>
+    <h1 class="text-4xl font-bold text-gray-900 mb-4">Pristup odbijen</h1>
+    <p class="text-gray-600 mb-8">Nemate dozvolu za pristup ovom resursu.</p>
+    <a href="{{ url_for('main.dashboard') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg inline-block">
+        Povratak na Dashboard
+    </a>
+</div>
+{% endblock %}

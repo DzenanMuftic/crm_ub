@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="bs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prijava - Universal Bank CRM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-500 to-blue-900 min-h-screen flex items-center justify-center">
+    <div class="max-w-md w-full mx-4">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="mb-4 px-4 py-3 rounded {% if category == 'danger' %}bg-red-100 text-red-700 border border-red-400{% else %}bg-blue-100 text-blue-700 border border-blue-400{% endif %}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Login Card -->
+        <div class="bg-white rounded-lg shadow-2xl overflow-hidden">
+            <div class="bg-blue-900 text-white px-6 py-8 text-center">
+                <h1 class="text-3xl font-bold mb-2">🏦 Universal Bank</h1>
+                <p class="text-blue-200">CRM Sistem</p>
+            </div>
+
+            <form method="POST" action="{{ url_for('auth.login') }}" class="px-6 py-8">
+                <div class="mb-6">
+                    <label for="username" class="block text-gray-700 font-medium mb-2">
+                        Korisničko ime
+                    </label>
+                    <input type="text"
+                           id="username"
+                           name="username"
+                           required
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           placeholder="Unesite korisničko ime">
+                </div>
+
+                <div class="mb-6">
+                    <label for="password" class="block text-gray-700 font-medium mb-2">
+                        Lozinka
+                    </label>
+                    <input type="password"
+                           id="password"
+                           name="password"
+                           required
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           placeholder="Unesite lozinku">
+                </div>
+
+                <div class="mb-6 flex items-center">
+                    <input type="checkbox"
+                           id="remember"
+                           name="remember"
+                           class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                    <label for="remember" class="ml-2 block text-sm text-gray-700">
+                        Zapamti me
+                    </label>
+                </div>
+
+                <button type="submit"
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200">
+                    Prijavi se
+                </button>
+            </form>
+
+            <div class="px-6 pb-6 text-center text-sm text-gray-600">
+                <p>Demo pristup: admin / admin123</p>
+            </div>
+        </div>
+
+        <div class="text-center mt-4 text-white text-sm">
+            <p>&copy; 2024 Universal Bank. Sva prava zadržana.</p>
+        </div>
+    </div>
+</body>
+</html>

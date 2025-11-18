@@ -1,0 +1,174 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Novi klijent - {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <h1 class="text-3xl font-bold text-gray-900">Novi klijent</h1>
+    <p class="text-gray-600 mt-1">Dodajte novog klijenta u CRM sistem</p>
+</div>
+
+<div class="bg-white rounded-lg shadow-lg p-8 max-w-4xl">
+    <form method="POST" action="{{ url_for('customers.create') }}">
+        <!-- Basic Information -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold text-gray-900 mb-4 pb-2 border-b">Osnovne informacije</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Ime *</label>
+                    <input type="text" name="first_name" required
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           placeholder="Unesi ime">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Prezime *</label>
+                    <input type="text" name="last_name" required
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           placeholder="Unesi prezime">
+                </div>
+
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Kompanija</label>
+                    <input type="text" name="company_name"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           placeholder="Naziv kompanije (opcionalno)">
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Information -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold text-gray-900 mb-4 pb-2 border-b">Kontakt informacije</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
+                    <input type="email" name="email" required
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           placeholder="email@example.com">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Telefon</label>
+                    <input type="tel" name="phone"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           placeholder="+387 XX XXX XXX">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Mobitel</label>
+                    <input type="tel" name="mobile"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           placeholder="+387 6X XXX XXX">
+                </div>
+            </div>
+        </div>
+
+        <!-- Address Information -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold text-gray-900 mb-4 pb-2 border-b">Adresa</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Adresa</label>
+                    <input type="text" name="address"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           placeholder="Ulica i broj">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Grad</label>
+                    <input type="text" name="city"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           placeholder="Grad">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Poštanski broj</label>
+                    <input type="text" name="postal_code"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           placeholder="71000">
+                </div>
+            </div>
+        </div>
+
+        <!-- CRM Classification -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold text-gray-900 mb-4 pb-2 border-b">CRM klasifikacija</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Faza *</label>
+                    <select name="stage" required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="SUSPECT" selected>Suspect</option>
+                        <option value="PROSPECT">Prospect</option>
+                        <option value="LEAD">Lead</option>
+                        <option value="CUSTOMER">Customer</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Segment *</label>
+                    <select name="segment" required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        {% for segment in segments %}
+                        <option value="{{ segment.name }}" {% if segment.name == 'RETAIL' %}selected{% endif %}>
+                            {{ segment.value }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Izvor</label>
+                    <select name="source"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Odaberi izvor</option>
+                        <option value="referral">Preporuka</option>
+                        <option value="website">Web stranica</option>
+                        <option value="call">Poziv</option>
+                        <option value="email">Email</option>
+                        <option value="event">Događaj</option>
+                        <option value="social">Društvene mreže</option>
+                        <option value="partner">Partner</option>
+                        <option value="other">Ostalo</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex items-center justify-end space-x-4 pt-6 border-t">
+            <a href="{{ url_for('customers.index') }}"
+               class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition">
+                Odustani
+            </a>
+            <button type="submit"
+                    class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">
+                Kreiraj klijenta
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Help Section -->
+<div class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4 max-w-4xl">
+    <div class="flex items-start">
+        <svg class="w-5 h-5 text-blue-600 mt-0.5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <div>
+            <h3 class="text-sm font-medium text-blue-900">Vodič za faze klijenata</h3>
+            <ul class="text-sm text-blue-700 mt-2 space-y-1">
+                <li><strong>Suspect:</strong> Potencijalni klijent koji još nije kvalificiran</li>
+                <li><strong>Prospect:</strong> Kvalificirani potencijalni klijent sa potvrđenom zainteresovanošću</li>
+                <li><strong>Lead:</strong> Aktivno zainteresovan prospect sa konkretnom prilikom</li>
+                <li><strong>Customer:</strong> Klijent koji je zaključio posao</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

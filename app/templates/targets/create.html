@@ -1,0 +1,215 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Novi cilj - {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <h1 class="text-3xl font-bold text-gray-900">Novi cilj</h1>
+    <p class="text-gray-600 mt-1">Postavi novi cilj za korisnika ili organizacionu jedinicu</p>
+</div>
+
+<div class="bg-white rounded-lg shadow-lg p-8 max-w-4xl">
+    <form method="POST" action="{{ url_for('targets.create') }}">
+        <!-- Basic Information -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold text-gray-900 mb-4 pb-2 border-b">Osnovne informacije</h2>
+
+            <div class="grid grid-cols-1 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Naziv cilja *</label>
+                    <input type="text" name="name" required
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           placeholder="Npr. Q1 Prihod prodaje">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Opis</label>
+                    <textarea name="description" rows="3"
+                              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Detaljni opis cilja"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Target Configuration -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold text-gray-900 mb-4 pb-2 border-b">Konfiguracija cilja</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Tip cilja *</label>
+                    <select name="target_type" required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Odaberi tip</option>
+                        {% for target_type in target_types %}
+                        <option value="{{ target_type.name }}">
+                            {% if target_type.name == 'REVENUE' %}Prihod
+                            {% elif target_type.name == 'NEW_CUSTOMERS' %}Novi klijenti
+                            {% elif target_type.name == 'PRODUCT_SALES' %}Prodaja proizvoda
+                            {% elif target_type.name == 'PORTFOLIO_GROWTH' %}Rast portfolija
+                            {% elif target_type.name == 'CROSS_SELL' %}Cross-sell
+                            {% else %}{{ target_type.value }}{% endif %}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Ciljana vrijednost (BAM) *</label>
+                    <input type="number" name="target_value" step="0.01" min="0" required
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           placeholder="100000.00">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Period *</label>
+                    <select name="period_type" required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Odaberi period</option>
+                        {% for period in period_types %}
+                        <option value="{{ period.name }}">
+                            {% if period.name == 'MONTHLY' %}Mjesečno
+                            {% elif period.name == 'QUARTERLY' %}Kvartalno
+                            {% elif period.name == 'ANNUALLY' %}Godišnje
+                            {% else %}{{ period.value }}{% endif %}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Time Period -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold text-gray-900 mb-4 pb-2 border-b">Vremenski period</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Datum početka *</label>
+                    <input type="date" name="start_date" required
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Datum završetka *</label>
+                    <input type="date" name="end_date" required
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+            </div>
+        </div>
+
+        <!-- Assignment -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold text-gray-900 mb-4 pb-2 border-b">Dodjela cilja</h2>
+
+            <p class="text-sm text-gray-600 mb-4">Odaberi ili korisnika ili organizacionu jedinicu (ne oba)</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Korisnik</label>
+                    <select name="user_id" id="user_select"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Odaberi korisnika</option>
+                        {% for user in users %}
+                        <option value="{{ user.id }}">{{ user.full_name }} ({{ user.username }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Organizaciona jedinica</label>
+                    <select name="organizational_unit_id" id="org_unit_select"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Odaberi org. jedinicu</option>
+                        {% for org_unit in org_units %}
+                        <option value="{{ org_unit.id }}">{{ org_unit.name }} ({{ org_unit.type }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Optional Filters -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold text-gray-900 mb-4 pb-2 border-b">Opcionalni filteri</h2>
+
+            <p class="text-sm text-gray-600 mb-4">Ograniči cilj na specifičan proizvod ili segment</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Linija proizvoda</label>
+                    <select name="product_line"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Svi proizvodi</option>
+                        <option value="mortgage">Hipoteka</option>
+                        <option value="credit_card">Kreditna kartica</option>
+                        <option value="retail_loan">Gotovinski kredit</option>
+                        <option value="business_loan">Poslovni kredit</option>
+                        <option value="savings">Štednja</option>
+                        <option value="checking">Tekući račun</option>
+                        <option value="investment">Investicije</option>
+                        <option value="insurance">Osiguranje</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Segment klijenata</label>
+                    <select name="customer_segment"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Svi segmenti</option>
+                        <option value="retail">Retail</option>
+                        <option value="sme">SME</option>
+                        <option value="corporate">Corporate</option>
+                        <option value="private_banking">Private Banking</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex items-center justify-end space-x-4 pt-6 border-t">
+            <a href="{{ url_for('targets.index') }}"
+               class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition">
+                Odustani
+            </a>
+            <button type="submit"
+                    class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">
+                Kreiraj cilj
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Help Section -->
+<div class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4 max-w-4xl">
+    <div class="flex items-start">
+        <svg class="w-5 h-5 text-blue-600 mt-0.5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <div>
+            <h3 class="text-sm font-medium text-blue-900">Napomena o dodjeljivanju ciljeva</h3>
+            <ul class="text-sm text-blue-700 mt-2 space-y-1">
+                <li><strong>Korisnik:</strong> Cilj se dodjeljuje pojedinačnom korisniku za njegovo praćenje</li>
+                <li><strong>Organizaciona jedinica:</strong> Cilj se dodjeljuje cijeloj jedinici (filijala, regija, itd.)</li>
+                <li>Morate odabrati <strong>JEDNU</strong> opciju (korisnik ILI org. jedinica)</li>
+                <li>Ostvarenje cilja se automatski izračunava na osnovu stvarnih rezultata u sistemu</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+// Ensure only one assignment method is selected at a time
+document.getElementById('user_select').addEventListener('change', function() {
+    if (this.value) {
+        document.getElementById('org_unit_select').value = '';
+    }
+});
+
+document.getElementById('org_unit_select').addEventListener('change', function() {
+    if (this.value) {
+        document.getElementById('user_select').value = '';
+    }
+});
+</script>
+{% endblock %}

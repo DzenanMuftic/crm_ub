@@ -1,0 +1,205 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Profil - {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <h1 class="text-3xl font-bold text-gray-900">Moj profil</h1>
+    <p class="text-gray-600 mt-1">Pregled i upravljanje korisničkim profilom</p>
+</div>
+
+<!-- Profile Information -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Main Profile Card -->
+    <div class="lg:col-span-2">
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-xl font-bold text-gray-900 mb-6 pb-2 border-b">Osnovne informacije</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Ime</label>
+                    <p class="text-lg text-gray-900">{{ user.first_name }}</p>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Prezime</label>
+                    <p class="text-lg text-gray-900">{{ user.last_name }}</p>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Email</label>
+                    <p class="text-lg text-gray-900">{{ user.email }}</p>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Korisničko ime</label>
+                    <p class="text-lg text-gray-900">{{ user.username }}</p>
+                </div>
+
+                {% if user.phone %}
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Telefon</label>
+                    <p class="text-lg text-gray-900">{{ user.phone }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Access & Permissions -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mt-6">
+            <h2 class="text-xl font-bold text-gray-900 mb-6 pb-2 border-b">Pristup i dozvole</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Nivo pristupa</label>
+                    <p class="text-lg">
+                        <span class="px-3 py-1 rounded-full text-sm font-semibold
+                            {% if user.access_level.value == 1 %}bg-purple-100 text-purple-800
+                            {% elif user.access_level.value == 2 %}bg-blue-100 text-blue-800
+                            {% elif user.access_level.value == 3 %}bg-green-100 text-green-800
+                            {% else %}bg-gray-100 text-gray-800{% endif %}">
+                            {% if user.access_level.value == 1 %}Izvršni direktor
+                            {% elif user.access_level.value == 2 %}Regionalni menadžer
+                            {% elif user.access_level.value == 3 %}Menadžer filijale
+                            {% else %}Relationship Manager{% endif %}
+                        </span>
+                    </p>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Uloga</label>
+                    <p class="text-lg">
+                        <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-semibold">
+                            {{ user.role.value|capitalize }}
+                        </span>
+                    </p>
+                </div>
+
+                {% if user.organizational_unit %}
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Organizaciona jedinica</label>
+                    <p class="text-lg text-gray-900">
+                        {{ user.organizational_unit.name }} ({{ user.organizational_unit.type }})
+                    </p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Account Status -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mt-6">
+            <h2 class="text-xl font-bold text-gray-900 mb-6 pb-2 border-b">Status naloga</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Status</label>
+                    <p class="text-lg">
+                        {% if user.is_active %}
+                        <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-semibold">Aktivan</span>
+                        {% else %}
+                        <span class="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-semibold">Neaktivan</span>
+                        {% endif %}
+                    </p>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Kreiran</label>
+                    <p class="text-lg text-gray-900">{{ user.created_at|datetime('%d.%m.%Y') }}</p>
+                </div>
+
+                {% if user.last_login %}
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Posljednja prijava</label>
+                    <p class="text-lg text-gray-900">{{ user.last_login|datetime('%d.%m.%Y %H:%M') }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions Sidebar -->
+    <div class="lg:col-span-1">
+        <!-- Profile Actions -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h3 class="text-lg font-bold text-gray-900 mb-4">Akcije</h3>
+
+            <div class="space-y-3">
+                <a href="{{ url_for('auth.change_password') }}"
+                   class="block w-full bg-blue-600 hover:bg-blue-700 text-white text-center px-4 py-2 rounded-lg transition">
+                    Promijeni lozinku
+                </a>
+            </div>
+        </div>
+
+        <!-- Language Selection -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mt-6">
+            <h3 class="text-lg font-bold text-gray-900 mb-4">Jezik / Dil / Language</h3>
+
+            <div class="space-y-3">
+                <a href="{{ url_for('auth.change_language', language='bs') }}"
+                   class="block w-full text-center px-4 py-2 rounded-lg transition
+                   {% if user.language == 'bs' or not user.language %}bg-green-600 text-white{% else %}bg-gray-100 text-gray-700 hover:bg-gray-200{% endif %}">
+                    🇧🇦 Bosanski
+                </a>
+
+                <a href="{{ url_for('auth.change_language', language='tr') }}"
+                   class="block w-full text-center px-4 py-2 rounded-lg transition
+                   {% if user.language == 'tr' %}bg-red-600 text-white{% else %}bg-gray-100 text-gray-700 hover:bg-gray-200{% endif %}">
+                    🇹🇷 Türkçe
+                </a>
+
+                <a href="{{ url_for('auth.change_language', language='en') }}"
+                   class="block w-full text-center px-4 py-2 rounded-lg transition
+                   {% if user.language == 'en' %}bg-blue-600 text-white{% else %}bg-gray-100 text-gray-700 hover:bg-gray-200{% endif %}">
+                    🇬🇧 English
+                </a>
+            </div>
+        </div>
+
+        <!-- Activity Summary -->
+        <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-lg p-6 mt-6 text-white">
+            <h3 class="text-lg font-bold mb-4">Moja aktivnost</h3>
+
+            <div class="space-y-4">
+                <div class="flex items-center justify-between pb-3 border-b border-blue-400">
+                    <span class="text-blue-100">Klijenti</span>
+                    <span class="text-2xl font-bold">{{ user.owned_customers|length }}</span>
+                </div>
+
+                <div class="flex items-center justify-between pb-3 border-b border-blue-400">
+                    <span class="text-blue-100">Aktivnosti</span>
+                    <span class="text-2xl font-bold">{{ user.activities|length }}</span>
+                </div>
+
+                <div class="flex items-center justify-between">
+                    <span class="text-blue-100">Zadaci</span>
+                    <span class="text-2xl font-bold">{{ user.tasks|length }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Access Level Info -->
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
+            <div class="flex items-start">
+                <svg class="w-5 h-5 text-blue-600 mt-0.5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <div>
+                    <h4 class="text-sm font-medium text-blue-900">Nivo pristupa</h4>
+                    <p class="text-sm text-blue-700 mt-1">
+                        {% if user.access_level.value == 1 %}
+                        Imate potpuni pristup svim podacima u sistemu.
+                        {% elif user.access_level.value == 2 %}
+                        Imate pristup podacima za vašu regiju i sve filijale u njoj.
+                        {% elif user.access_level.value == 3 %}
+                        Imate pristup podacima za vašu filijalu i vaš tim.
+                        {% else %}
+                        Imate pristup samo vašem portfoliju klijenata.
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

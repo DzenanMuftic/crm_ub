@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="bs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ app_name }}{% endblock %}</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom CSS -->
+    <style>
+        .flash-success { @apply bg-green-100 border-green-400 text-green-700; }
+        .flash-danger { @apply bg-red-100 border-red-400 text-red-700; }
+        .flash-warning { @apply bg-yellow-100 border-yellow-400 text-yellow-700; }
+        .flash-info { @apply bg-blue-100 border-blue-400 text-blue-700; }
+    </style>
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-gray-50 min-h-screen">
+    {% if current_user.is_authenticated %}
+    <!-- Navigation -->
+    <nav class="bg-blue-900 text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <a href="{{ url_for('main.dashboard') }}" class="text-xl font-bold">
+                            🏦 Universal Bank CRM
+                        </a>
+                    </div>
+                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <a href="{{ url_for('main.dashboard') }}"
+                           class="inline-flex items-center px-1 pt-1 text-sm font-medium hover:text-blue-200">
+                            Dashboard
+                        </a>
+                        <a href="{{ url_for('customers.index') }}"
+                           class="inline-flex items-center px-1 pt-1 text-sm font-medium hover:text-blue-200">
+                            Klijenti
+                        </a>
+                        <a href="{{ url_for('opportunities.index') }}"
+                           class="inline-flex items-center px-1 pt-1 text-sm font-medium hover:text-blue-200">
+                            Prilike
+                        </a>
+                        <a href="{{ url_for('activities.tasks') }}"
+                           class="inline-flex items-center px-1 pt-1 text-sm font-medium hover:text-blue-200">
+                            Zadaci
+                        </a>
+                        <a href="{{ url_for('targets.index') }}"
+                           class="inline-flex items-center px-1 pt-1 text-sm font-medium hover:text-blue-200">
+                            Ciljevi
+                        </a>
+                        {% if current_user.access_level.value <= 3 %}
+                        <a href="{{ url_for('analytics.index') }}"
+                           class="inline-flex items-center px-1 pt-1 text-sm font-medium hover:text-blue-200">
+                            Analitika
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <a href="{{ url_for('auth.profile') }}" class="text-sm mr-4 hover:text-blue-200">
+                        {{ current_user.full_name }}
+                    </a>
+                    <a href="{{ url_for('auth.logout') }}"
+                       class="bg-blue-800 hover:bg-blue-700 px-3 py-2 rounded text-sm">
+                        Odjava
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    {% endif %}
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+                {% for category, message in messages %}
+                <div class="flash-{{ category }} border px-4 py-3 rounded mb-2" role="alert">
+                    <span class="block sm:inline">{{ message }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <p class="text-center text-gray-500 text-sm">
+                &copy; 2024 Universal Bank. Sva prava zadržana.
+            </p>
+        </div>
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

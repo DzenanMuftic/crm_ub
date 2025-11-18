@@ -1,0 +1,14 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Greška servera - {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="text-center py-12">
+    <div class="text-6xl mb-4">⚠️</div>
+    <h1 class="text-4xl font-bold text-gray-900 mb-4">Greška servera</h1>
+    <p class="text-gray-600 mb-8">Došlo je do greške na serveru. Pokušajte ponovo kasnije.</p>
+    <a href="{{ url_for('main.dashboard') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg inline-block">
+        Povratak na Dashboard
+    </a>
+</div>
+{% endblock %}
